@@ -34,11 +34,15 @@ public class SystemConfiguration {
 	private boolean hardMode = false;					// Solve the hard version of the task
 
 	private static String getDefaultHost() {
-		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			return "localhost";
-		}
+		// For local testing, always use localhost
+		return "localhost";
+    /*
+    try {
+        return InetAddress.getLocalHost().getHostAddress();
+    } catch (UnknownHostException e) {
+        return "localhost";
+    }
+    */
 	}
 
 	public void update(CommandMaster commandMaster) {

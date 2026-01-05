@@ -1,13 +1,19 @@
 package de.ddm;
 
 import akka.actor.typed.ActorSystem;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import de.ddm.actors.Guardian;
 import de.ddm.configuration.Command;
 import de.ddm.configuration.SystemConfiguration;
 import de.ddm.singletons.SystemConfigurationSingleton;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-
+@Slf4j
+@Getter
+@Setter
 public class Main {
 
 	public static void main(String[] args) {

@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ddm.de</groupId>
@@ -10,7 +12,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<akka.version>2.10.9</akka.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<akka.version>2.8.5</akka.version>
 		<scala.version>2.13</scala.version>
 		<logback.version>1.5.19</logback.version>
 		<junit.version>4.13.2</junit.version>
@@ -22,7 +26,30 @@
 		<jol.version>0.17</jol.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+		<!-- Akka repository if needed -->
+		<repository>
+			<id>akka-repository</id>
+			<name>Akka Repository</name>
+			<url>https://repo.akka.io/maven</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>Maven Central Plugin Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<dependencies>
+		<!-- Akka dependencies -->
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
 			<artifactId>akka-actor-typed_${scala.version}</artifactId>
@@ -54,37 +81,58 @@
 			<artifactId>akka-serialization-jackson_${scala.version}</artifactId>
 			<version>${akka.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.17</version>
+		</dependency>
+
+		<!-- Logging -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
+
+		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Lombok for annotations -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
+			<scope>provided</scope>
 		</dependency>
+
+		<!-- Command line parsing -->
 		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>${jcommander.version}</version>
 		</dependency>
+
+		<!-- Utilities -->
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
 			<artifactId>fastutil</artifactId>
 			<version>${fastutil.version}</version>
 		</dependency>
+
+		<!-- CSV parsing -->
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>${opencsv.version}</version>
 		</dependency>
+
+		<!-- Memory analysis -->
 		<dependency>
 			<groupId>org.openjdk.jol</groupId>
 			<artifactId>jol-core</artifactId>
@@ -95,19 +143,39 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
+			<!-- Compiler plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.14.1</version>
 				<configuration>
-					<source>21</source>
-					<target>21</target>
+					<source>17</source>
+					<target>17</target>
 					<fork>true</fork>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
 					<compilerArgument>-Xlint:all</compilerArgument>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<!-- Exec plugin for running -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>de.ddm.Main</mainClass>
+				</configuration>
+			</plugin>
+
+			<!-- Shade plugin for creating executable JAR -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -121,11 +189,11 @@
 						<configuration>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>de.ddm.Main</mainClass>
 								</transformer>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 									<resource>reference.conf</resource>
 								</transformer>
 							</transformers>
