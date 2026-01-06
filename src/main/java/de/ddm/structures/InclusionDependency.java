@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
-public class InclusionDependency {
+public class InclusionDependency implements Serializable {
+	private static final long serialVersionUID = 1L;  // Add this line!
 
 	private final File dependentFile;
 	private final String[] dependentAttributes;

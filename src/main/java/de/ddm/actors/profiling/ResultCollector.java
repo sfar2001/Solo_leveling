@@ -84,16 +84,19 @@ public class ResultCollector extends AbstractBehavior<ResultCollector.Message> {
 	}
 
 	private Behavior<Message> handle(ResultMessage message) throws IOException {
-//		this.getContext().getLog().info("Received {} INDs!", message.getInclusionDependencies().size());
+		this.getContext().getLog().info("📝 ResultCollector received {} INDs!", message.getInclusionDependencies().size());
 
 		for (InclusionDependency ind : message.getInclusionDependencies()) {
+			this.getContext().getLog().debug("📝 Writing IND: {}", ind.toString());
 			this.writer.write(ind.toString());
 			this.writer.newLine();
 		}
 
+		this.writer.flush(); // ADD THIS: Flush after each batch
+		this.getContext().getLog().info("📝 Flushed writer");
+
 		return this;
 	}
-
 	private Behavior<Message> handle(FinalizeMessage message) throws IOException {
 		this.getContext().getLog().info("Received FinalizeMessage!");
 

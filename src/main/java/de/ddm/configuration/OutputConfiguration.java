@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class OutputConfiguration {
 
-	private final String outputFileName = "results.txt";
+	private final String outputFileName = "resultWDC.txt";
 }
